@@ -352,34 +352,7 @@ mysql> select thing  , SUM(arms) as "total arms" from new_table2
 +--------------+------------+
 12 rows in set (0.03 sec)
 
-mysql> inser into  new_table
-    -> (thing, legs, arms)
-    -> values
-    -> ("humen",2,2),
-    -> ("insect",6,0),
-    -> ("octopus",0,8);
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'inser into  new_table
-(thing, legs, arms)
-values
-("humen",2,2),
-("insect",6,0),
-' at line 1
-mysql> insert into  new_table
-    -> ddd
-    -> ;
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ddd' at line 2
-mysql> insert into  new_table2
-    -> ("humen",2,2),
-    -> (thing, legs, arms);
-ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '"humen",2,2),
-(thing, legs, arms)' at line 2
-mysql> insert into  new_table2
-    -> (thing, legs, arms)
-    -> values
-    -> ("humen",2,2),
-    -> ("insect",6,0),
-    -> ("octopus",0,8);
-ERROR 1423 (HY000): Field of view 'cookbook.new_table2' underlying table doesn't have a default value
+
 mysql> select * from new_limbs;
 +--------------+------+------+------------+-------+----+-------------+
 | thing        | legs | arms | c2_changed | newc2 | c1 | performence |
