@@ -1,0 +1,479 @@
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 11
+Server version: 8.0.22 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use cookbook
+Database changed
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| cookbook           |
+| demo1              |
+| information_schema |
+| mydb               |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+7 rows in set (0.05 sec)
+
+mysql> show tables;
++--------------------+
+| Tables_in_cookbook |
++--------------------+
+| books              |
+| car                |
+| mytable            |
+| mytable1           |
+| new_limbs          |
+| stack              |
+| stack1             |
+| xyz                |
++--------------------+
+8 rows in set (0.00 sec)
+
+mysql> create view new_table as
+    -> select username ,name, brand
+    -> from mytable,car;
+Query OK, 0 rows affected (0.64 sec)
+
+mysql> select * from new_table;
+Empty set (0.02 sec)
+
+mysql> create view new_table1 as
+    -> select car_id ,name, brandn,thing
+    -> from mytable,car,new_limbs;
+ERROR 1054 (42S22): Unknown column 'brandn' in 'field list'
+mysql> create view new_table1 as
+    -> select username ,name, brand, thing
+    -> from mytable,car,new_limbs;
+Query OK, 0 rows affected (0.19 sec)
+
+mysql> select * from new_table1;
+Empty set (0.00 sec)
+
+mysql> create view new_table2 as
+    -> select thing , arms, legs
+    -> from new_limbs;
+Query OK, 0 rows affected (0.53 sec)
+
+mysql> select * from new_table2;
++--------------+------+------+
+| thing        | arms | legs |
++--------------+------+------+
+| human        |    2 |    2 |
+| insect       |    0 |    6 |
+| squid        |   10 |    0 |
+| octopus      |    8 |    0 |
+| fish         |    0 |    0 |
+| centipede    |    0 |  100 |
+| table        |    0 |    4 |
+| armchair     |    2 |    4 |
+| phonograph   |    1 |    0 |
+| tripod       |    0 |    3 |
+| Peg Leg Pete |    2 |    1 |
+| space alien  | NULL | NULL |
++--------------+------+------+
+12 rows in set (0.00 sec)
+
+mysql> select distinct thing ,arms,legs from new_table2;
++--------------+------+------+
+| thing        | arms | legs |
++--------------+------+------+
+| human        |    2 |    2 |
+| insect       |    0 |    6 |
+| squid        |   10 |    0 |
+| octopus      |    8 |    0 |
+| fish         |    0 |    0 |
+| centipede    |    0 |  100 |
+| table        |    0 |    4 |
+| armchair     |    2 |    4 |
+| phonograph   |    1 |    0 |
+| tripod       |    0 |    3 |
+| Peg Leg Pete |    2 |    1 |
+| space alien  | NULL | NULL |
++--------------+------+------+
+12 rows in set (0.00 sec)
+
+mysql> select distinct arms,legs from new_table2;
++------+------+
+| arms | legs |
++------+------+
+|    2 |    2 |
+|    0 |    6 |
+|   10 |    0 |
+|    8 |    0 |
+|    0 |    0 |
+|    0 |  100 |
+|    0 |    4 |
+|    2 |    4 |
+|    1 |    0 |
+|    0 |    3 |
+|    2 |    1 |
+| NULL | NULL |
++------+------+
+12 rows in set (0.00 sec)
+
+mysql> select distinct name from car;
++---------+
+| name    |
++---------+
+| Audi A1 |
+| Audi A2 |
+| Audi A3 |
++---------+
+3 rows in set (0.00 sec)
+
+mysql> select * from new_car;
+ERROR 1146 (42S02): Table 'cookbook.new_car' doesn't exist
+mysql> select * from car;
++--------+---------+----------+-------+-------+
+| car_id | name    | price    | speed | brand |
++--------+---------+----------+-------+-------+
+|      1 | Audi A1 | 20000.00 |     0 |     0 |
+|      2 | Audi A1 | 15000.00 |     0 |     0 |
+|      3 | Audi A2 | 40000.00 |     0 |     0 |
+|      4 | Audi A2 | 40000.00 |     0 |     0 |
+|      5 | Audi A3 | 15000.00 |     0 |     0 |
++--------+---------+----------+-------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select distinct arms from new_table2;
++------+
+| arms |
++------+
+|    2 |
+|    0 |
+|   10 |
+|    8 |
+|    1 |
+| NULL |
++------+
+6 rows in set (0.00 sec)
+
+mysql> select distinct legs from new_table2;
++------+
+| legs |
++------+
+|    2 |
+|    6 |
+|    0 |
+|  100 |
+|    4 |
+|    3 |
+|    1 |
+| NULL |
++------+
+8 rows in set (0.00 sec)
+
+mysql> select distinct thing from new_table2;
++--------------+
+| thing        |
++--------------+
+| human        |
+| insect       |
+| squid        |
+| octopus      |
+| fish         |
+| centipede    |
+| table        |
+| armchair     |
+| phonograph   |
+| tripod       |
+| Peg Leg Pete |
+| space alien  |
++--------------+
+12 rows in set (0.00 sec)
+
+mysql> select * from new_table2
+    -> where legs = 0
+    -> order by arms;
++------------+------+------+
+| thing      | arms | legs |
++------------+------+------+
+| fish       |    0 |    0 |
+| phonograph |    1 |    0 |
+| octopus    |    8 |    0 |
+| squid      |   10 |    0 |
++------------+------+------+
+4 rows in set (0.00 sec)
+
+mysql> select * from new_table2
+    -> where legs = 0
+    -> order by thing;
++------------+------+------+
+| thing      | arms | legs |
++------------+------+------+
+| fish       |    0 |    0 |
+| octopus    |    8 |    0 |
+| phonograph |    1 |    0 |
+| squid      |   10 |    0 |
++------------+------+------+
+4 rows in set (0.03 sec)
+
+mysql> select * from new_table2
+    -> where legs = 0
+    -> order by arms ASC;
++------------+------+------+
+| thing      | arms | legs |
++------------+------+------+
+| fish       |    0 |    0 |
+| phonograph |    1 |    0 |
+| octopus    |    8 |    0 |
+| squid      |   10 |    0 |
++------------+------+------+
+4 rows in set (0.00 sec)
+
+mysql> select * from new_table2
+    -> where legs = 0
+    -> order by arms DESC;
++------------+------+------+
+| thing      | arms | legs |
++------------+------+------+
+| squid      |   10 |    0 |
+| octopus    |    8 |    0 |
+| phonograph |    1 |    0 |
+| fish       |    0 |    0 |
++------------+------+------+
+4 rows in set (0.00 sec)
+
+mysql> select * from new_table2
+    -> where legs = 0
+    -> order by arms ASC;
++------------+------+------+
+| thing      | arms | legs |
++------------+------+------+
+| fish       |    0 |    0 |
+| phonograph |    1 |    0 |
+| octopus    |    8 |    0 |
+| squid      |   10 |    0 |
++------------+------+------+
+4 rows in set (0.00 sec)
+
+mysql> select thing ,arms from new_table
+    -> where arms < 2
+    -> order by thing ASC, arms DESC;
+ERROR 1054 (42S22): Unknown column 'thing' in 'field list'
+mysql> select thing ,arms from new_table2
+    -> where arms < 2
+    -> order by thing ASC, arms DESC;
++------------+------+
+| thing      | arms |
++------------+------+
+| centipede  |    0 |
+| fish       |    0 |
+| insect     |    0 |
+| phonograph |    1 |
+| table      |    0 |
+| tripod     |    0 |
++------------+------+
+6 rows in set (0.00 sec)
+
+mysql> select thing ,arms from new_table2
+    -> where arms > 2
+    -> order by thing ASC, arms DESC;
++---------+------+
+| thing   | arms |
++---------+------+
+| octopus |    8 |
+| squid   |   10 |
++---------+------+
+2 rows in set (0.00 sec)
+
+mysql> select legs, arms COUNT(*) from new_table2
+    -> group by legs ,arms;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'COUNT(*) from new_table2
+group by legs ,arms' at line 1
+mysql> select legs, arms, COUNT(*) from new_table2
+    -> group by legs ,arms;
++------+------+----------+
+| legs | arms | COUNT(*) |
++------+------+----------+
+|    2 |    2 |        1 |
+|    6 |    0 |        1 |
+|    0 |   10 |        1 |
+|    0 |    8 |        1 |
+|    0 |    0 |        1 |
+|  100 |    0 |        1 |
+|    4 |    0 |        1 |
+|    4 |    2 |        1 |
+|    0 |    1 |        1 |
+|    3 |    0 |        1 |
+|    1 |    2 |        1 |
+| NULL | NULL |        1 |
++------+------+----------+
+12 rows in set (0.03 sec)
+
+mysql> select arms COUNT(*) from new_table2
+    -> group by arms;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'COUNT(*) from new_table2
+group by arms' at line 1
+mysql> select arms , COUNT(*) from new_table2
+    -> group by arms;
++------+----------+
+| arms | COUNT(*) |
++------+----------+
+|    2 |        3 |
+|    0 |        5 |
+|   10 |        1 |
+|    8 |        1 |
+|    1 |        1 |
+| NULL |        1 |
++------+----------+
+6 rows in set (0.00 sec)
+
+mysql> select thing  , SUM(arms) as "total arms" from new_table2
+    -> group by thing;
++--------------+------------+
+| thing        | total arms |
++--------------+------------+
+| human        |          2 |
+| insect       |          0 |
+| squid        |         10 |
+| octopus      |          8 |
+| fish         |          0 |
+| centipede    |          0 |
+| table        |          0 |
+| armchair     |          2 |
+| phonograph   |          1 |
+| tripod       |          0 |
+| Peg Leg Pete |          2 |
+| space alien  |       NULL |
++--------------+------------+
+12 rows in set (0.03 sec)
+
+mysql> inser into  new_table
+    -> (thing, legs, arms)
+    -> values
+    -> ("humen",2,2),
+    -> ("insect",6,0),
+    -> ("octopus",0,8);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'inser into  new_table
+(thing, legs, arms)
+values
+("humen",2,2),
+("insect",6,0),
+' at line 1
+mysql> insert into  new_table
+    -> ddd
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ddd' at line 2
+mysql> insert into  new_table2
+    -> ("humen",2,2),
+    -> (thing, legs, arms);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '"humen",2,2),
+(thing, legs, arms)' at line 2
+mysql> insert into  new_table2
+    -> (thing, legs, arms)
+    -> values
+    -> ("humen",2,2),
+    -> ("insect",6,0),
+    -> ("octopus",0,8);
+ERROR 1423 (HY000): Field of view 'cookbook.new_table2' underlying table doesn't have a default value
+mysql> select * from new_limbs;
++--------------+------+------+------------+-------+----+-------------+
+| thing        | legs | arms | c2_changed | newc2 | c1 | performence |
++--------------+------+------+------------+-------+----+-------------+
+| human        |    2 |    2 |            |       |    |             |
+| insect       |    6 |    0 |            |       |    |             |
+| squid        |    0 |   10 |            |       |    |             |
+| octopus      |    0 |    8 |            |       |    |             |
+| fish         |    0 |    0 |            |       |    |             |
+| centipede    |  100 |    0 |            |       |    |             |
+| table        |    4 |    0 |            |       |    |             |
+| armchair     |    4 |    2 |            |       |    |             |
+| phonograph   |    0 |    1 |            |       |    |             |
+| tripod       |    3 |    0 |            |       |    |             |
+| Peg Leg Pete |    1 |    2 |            |       |    |             |
+| space alien  | NULL | NULL |            |       |    |             |
++--------------+------+------+------------+-------+----+-------------+
+12 rows in set (0.00 sec)
+
+mysql> insert into new_limbs
+    -> (thing, legs, arms)
+    -> values
+    -> ("humen",2,2),
+    -> ("insect",6,0),
+    -> ("octopus",0,8);
+ERROR 1364 (HY000): Field 'c2_changed' doesn't have a default value
+mysql> alter table new_limbs
+    -> drop coloumn c2_changed,newc2,c1,performence;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'c2_changed,newc2,c1,performence' at line 2
+mysql> drop column c2_changed,newc2,c1,performence;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'column c2_changed,newc2,c1,performence' at line 1
+mysql> alter table new_limbs
+    -> drop column c2_changed,newc2,c1,performence;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'newc2,c1,performence' at line 2
+mysql> alter table new_limbs
+    -> drop column performence;
+Query OK, 0 rows affected (2.67 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table new_limbs
+    -> drop column c2_changed;
+Query OK, 0 rows affected (1.65 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table new_limbs
+    -> drop column newc2;
+Query OK, 0 rows affected (1.46 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table new_limbs
+    -> drop column c1;
+Query OK, 0 rows affected (2.07 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from new_limbs;
++--------------+------+------+
+| thing        | legs | arms |
++--------------+------+------+
+| human        |    2 |    2 |
+| insect       |    6 |    0 |
+| squid        |    0 |   10 |
+| octopus      |    0 |    8 |
+| fish         |    0 |    0 |
+| centipede    |  100 |    0 |
+| table        |    4 |    0 |
+| armchair     |    4 |    2 |
+| phonograph   |    0 |    1 |
+| tripod       |    3 |    0 |
+| Peg Leg Pete |    1 |    2 |
+| space alien  | NULL | NULL |
++--------------+------+------+
+12 rows in set (0.00 sec)
+
+mysql> insert into new_limbs
+    -> (thing, legs, arms)
+    -> values
+    -> ("humen",2,2),
+    -> ("insect",6,0),
+    -> ("octopus",0,8);
+Query OK, 3 rows affected (0.30 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select thing  , SUM(arms) as "total arms" from new_limbs
+    -> group by arms;
++-------------+------------+
+| thing       | total arms |
++-------------+------------+
+| human       |          8 |
+| insect      |          0 |
+| squid       |         10 |
+| octopus     |         16 |
+| phonograph  |          1 |
+| space alien |       NULL |
++-------------+------------+
+6 rows in set (0.00 sec)
+
+mysql>
